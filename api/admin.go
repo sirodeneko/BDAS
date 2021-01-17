@@ -1,15 +1,14 @@
 package api
 
 import (
-	"singo/serializer"
-	"singo/service"
-
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"singo/serializer"
+	"singo/service"
 )
 
-// UserRegister 用户注册接口
-func UserRegister(c *gin.Context) {
+// AdminRegister 管理员注册接口
+func AdminRegister(c *gin.Context) {
 	var service service.UserRegisterService
 	if err := c.ShouldBind(&service); err == nil {
 		res := service.Register()
@@ -19,15 +18,15 @@ func UserRegister(c *gin.Context) {
 	}
 }
 
-// UserMe 用户详情
-func UserMe(c *gin.Context) {
+// AdminMe 管理员用户详情
+func AdminMe(c *gin.Context) {
 	user := CurrentUser(c)
 	res := serializer.BuildUserResponse(*user)
 	c.JSON(200, res)
 }
 
-// UserLogout 用户登出
-func UserLogout(c *gin.Context) {
+// AdminLogout 管理员用户登出
+func AdminLogout(c *gin.Context) {
 	s := sessions.Default(c)
 	s.Clear()
 	s.Save()
@@ -35,15 +34,4 @@ func UserLogout(c *gin.Context) {
 		Code: 0,
 		Msg:  "登出成功",
 	})
-}
-
-// Login 统一登入接口
-func Login(c *gin.Context) {
-	var service service.LoginService
-	if err := c.ShouldBind(&service); err == nil {
-		res := service.Login(c)
-		c.JSON(200, res)
-	} else {
-		c.JSON(200, ErrorResponse(err))
-	}
 }

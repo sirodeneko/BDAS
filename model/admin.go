@@ -15,6 +15,7 @@ type Admin struct {
 	Nickname       string
 	Status         string
 }
+type MyInt string
 
 const (
 	AdminType      string = "admin"

@@ -3,13 +3,11 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gin-gonic/gin"
+	validator "gopkg.in/go-playground/validator.v8"
 	"singo/conf"
 	"singo/model"
 	"singo/serializer"
-	"singo/service"
-
-	"github.com/gin-gonic/gin"
-	validator "gopkg.in/go-playground/validator.v8"
 )
 
 // Ping 状态检查页面
@@ -20,7 +18,7 @@ func Ping(c *gin.Context) {
 	})
 }
 
-// CurrentUser 获取当前用户
+// CurrentUser 获取当前普通用户
 func CurrentUser(c *gin.Context) *model.User {
 	if user, _ := c.Get("user"); user != nil {
 		if u, ok := user.(*model.User); ok {
@@ -47,15 +45,4 @@ func ErrorResponse(err error) serializer.Response {
 	}
 
 	return serializer.ParamErr("参数错误", err)
-}
-
-// Login 统一登入接口
-func Login(c *gin.Context) {
-	var service service.LoginService
-	if err := c.ShouldBind(&service); err == nil {
-		res := service.Login(c)
-		c.JSON(200, res)
-	} else {
-		c.JSON(200, ErrorResponse(err))
-	}
 }
