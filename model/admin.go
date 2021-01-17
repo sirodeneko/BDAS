@@ -1,8 +1,10 @@
 package model
 
 import (
+	"errors"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
+	"singo/util"
 )
 
 // Admin 管理员模型
@@ -12,6 +14,27 @@ type Admin struct {
 	PasswordDigest string
 	Nickname       string
 	Status         string
+}
+
+const (
+	AdminType      string = "admin"
+	UserType       string = "user"
+	UniversityType string = "university"
+)
+
+func GetUserWithType(uType string, ID interface{}) (interface{}, error) {
+	switch uType {
+	case AdminType:
+		return GetAdmin(ID)
+	case UserType:
+		return GetUser(ID)
+	case UniversityType:
+		return GetUniversity(ID)
+	default:
+		err := errors.New("类型匹配失败")
+		util.Log().Warning(uType+"类型匹配失败", err)
+		return nil, err
+	}
 }
 
 // GetAdmin 用ID获取管理员

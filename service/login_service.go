@@ -15,18 +15,12 @@ type LoginService struct {
 	Password       string `form:"password" json:"password" binding:"required,min=8,max=40"`
 }
 
-const (
-	AdminType      string = "admin"
-	UserType       string = "user"
-	UniversityType string = "university"
-)
-
 // setSession 设置session
 func (service *LoginService) setSession(c *gin.Context, id uint, t string) {
 	s := sessions.Default(c)
 	s.Clear()
 	s.Set("user_id", id)
-	s.Set("type", t)
+	s.Set("user_type", t)
 	s.Save()
 }
 
@@ -82,11 +76,11 @@ func (service *LoginService) universityLogin(c *gin.Context) serializer.Response
 // Login 用户登录函数
 func (service *LoginService) Login(c *gin.Context) serializer.Response {
 	switch service.UType {
-	case AdminType:
+	case model.AdminType:
 		return service.adminLogin(c)
-	case UserType:
+	case model.UserType:
 		return service.userLogin(c)
-	case UniversityType:
+	case model.UniversityType:
 		return service.universityLogin(c)
 	default:
 		return serializer.ParamErr("账户类型错误", nil)
