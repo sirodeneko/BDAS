@@ -12,7 +12,6 @@ type User struct {
 	PasswordDigest string
 	Nickname       string
 	Status         string
-	Avatar         string `gorm:"size:1000"`
 }
 
 const (

@@ -6,6 +6,7 @@ import (
 	"singo/conf"
 	"singo/model"
 	"singo/serializer"
+	"singo/service"
 
 	"github.com/gin-gonic/gin"
 	validator "gopkg.in/go-playground/validator.v8"
@@ -46,4 +47,15 @@ func ErrorResponse(err error) serializer.Response {
 	}
 
 	return serializer.ParamErr("参数错误", err)
+}
+
+// Login 统一登入接口
+func Login(c *gin.Context) {
+	var service service.LoginService
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.Login(c)
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
 }
