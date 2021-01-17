@@ -31,7 +31,20 @@ func (service *LoginService) setSession(c *gin.Context, id uint, t string) {
 }
 
 func (service *LoginService) adminLogin(c *gin.Context) serializer.Response {
+	var admin model.Admin
 
+	if err := model.DB.Where("user_name = ?", service.UserName).First(&admin).Error; err != nil {
+		return serializer.ParamErr("账号或密码错误", nil)
+	}
+
+	if admin.CheckPassword(service.Password) == false {
+		return serializer.ParamErr("账号或密码错误", nil)
+	}
+
+	// 设置session
+	service.setSession(c, admin.ID, service.UType)
+
+	return serializer.BuildAdminResponse(admin)
 }
 func (service *LoginService) userLogin(c *gin.Context) serializer.Response {
 	var user model.User
@@ -50,7 +63,20 @@ func (service *LoginService) userLogin(c *gin.Context) serializer.Response {
 	return serializer.BuildUserResponse(user)
 }
 func (service *LoginService) universityLogin(c *gin.Context) serializer.Response {
+	var university model.University
 
+	if err := model.DB.Where("user_name = ? && university_name = ？", service.UserName, service.UniversityName).First(&university).Error; err != nil {
+		return serializer.ParamErr("账号或密码错误", nil)
+	}
+
+	if university.CheckPassword(service.Password) == false {
+		return serializer.ParamErr("账号或密码错误", nil)
+	}
+
+	// 设置session
+	service.setSession(c, university.ID, service.UType)
+
+	return serializer.BuildUniversityResponse(university)
 }
 
 // Login 用户登录函数

@@ -11,8 +11,8 @@ type Admin struct {
 }
 
 // BuildAdmin 序列管理员
-func BuildAdmin(admin model.Admin) User {
-	return User{
+func BuildAdmin(admin model.Admin) Admin {
+	return Admin{
 		ID:        admin.ID,
 		UserName:  admin.UserName,
 		Nickname:  admin.Nickname,

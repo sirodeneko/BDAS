@@ -13,7 +13,7 @@ type University struct {
 	PasswordDigest string // 密码
 	Nickname       string // 账号名称
 	Status         string // 账号状态
-	Description    string // 描述
+	// Description    string // 描述
 }
 
 // GetUniversity 用ID获取学校管理员
