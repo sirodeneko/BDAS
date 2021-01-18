@@ -51,3 +51,22 @@ func Login(c *gin.Context) {
 		c.JSON(200, ErrorResponse(err))
 	}
 }
+
+// UserModify 用户修改个人信息
+func UserModify(c *gin.Context) {
+	var service service.UserModifyService
+	var ID uint
+
+	if user, ok := CurrentUser(c).(*model.User); ok {
+		ID = user.ID
+	} else {
+		c.JSON(200, serializer.CheckLogin())
+	}
+
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.UserModify(ID)
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
+}
