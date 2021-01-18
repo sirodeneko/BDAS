@@ -3,13 +3,14 @@ package api
 import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"singo/model"
 	"singo/serializer"
 	"singo/service"
 )
 
 // AdminRegister 管理员注册接口
 func AdminRegister(c *gin.Context) {
-	var service service.UserRegisterService
+	var service service.AdminRegisterService
 	if err := c.ShouldBind(&service); err == nil {
 		res := service.Register()
 		c.JSON(200, res)
@@ -20,9 +21,12 @@ func AdminRegister(c *gin.Context) {
 
 // AdminMe 管理员用户详情
 func AdminMe(c *gin.Context) {
-	user := CurrentUser(c)
-	res := serializer.BuildUserResponse(*user)
-	c.JSON(200, res)
+	if admin, ok := CurrentUser(c).(*model.Admin); ok {
+		res := serializer.BuildAdminResponse(*admin)
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, serializer.CheckLogin())
+	}
 }
 
 // AdminLogout 管理员用户登出

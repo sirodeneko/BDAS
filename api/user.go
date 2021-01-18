@@ -1,6 +1,7 @@
 package api
 
 import (
+	"singo/model"
 	"singo/serializer"
 	"singo/service"
 
@@ -21,9 +22,12 @@ func UserRegister(c *gin.Context) {
 
 // UserMe 用户详情
 func UserMe(c *gin.Context) {
-	user := CurrentUser(c)
-	res := serializer.BuildUserResponse(*user)
-	c.JSON(200, res)
+	if user, ok := CurrentUser(c).(*model.User); ok {
+		res := serializer.BuildUserResponse(*user)
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, serializer.CheckLogin())
+	}
 }
 
 // UserLogout 用户登出

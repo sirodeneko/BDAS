@@ -59,7 +59,7 @@ func (service *LoginService) userLogin(c *gin.Context) serializer.Response {
 func (service *LoginService) universityLogin(c *gin.Context) serializer.Response {
 	var university model.University
 
-	if err := model.DB.Where("user_name = ? && university_name = ？", service.UserName, service.UniversityName).First(&university).Error; err != nil {
+	if err := model.DB.Where("user_name = ? and university_name = ？", service.UserName, service.UniversityName).First(&university).Error; err != nil {
 		return serializer.ParamErr("账号或密码错误", nil)
 	}
 

@@ -33,6 +33,14 @@ const (
 	CodeParamErr = 40001
 )
 
+// CheckLogin 检查封禁
+func CheckSuspend() Response {
+	return Response{
+		Code: CodeNoRightErr,
+		Msg:  "用户被封禁登录",
+	}
+}
+
 // CheckLogin 检查登录
 func CheckLogin() Response {
 	return Response{

@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 	validator "gopkg.in/go-playground/validator.v8"
 	"singo/conf"
-	"singo/model"
 	"singo/serializer"
 )
 
@@ -18,12 +17,10 @@ func Ping(c *gin.Context) {
 	})
 }
 
-// CurrentUser 获取当前普通用户
-func CurrentUser(c *gin.Context) *model.User {
+// CurrentUser 获取当前用户
+func CurrentUser(c *gin.Context) interface{} {
 	if user, _ := c.Get("user"); user != nil {
-		if u, ok := user.(*model.User); ok {
-			return u
-		}
+		return user
 	}
 	return nil
 }
