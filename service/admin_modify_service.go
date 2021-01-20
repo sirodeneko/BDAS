@@ -5,18 +5,18 @@ import (
 	"singo/serializer"
 )
 
-// UserModifyService 普通用户修改信息的服务
-type UserModifyService struct {
+// AdminModifyService 管理员修改信息的服务
+type AdminModifyService struct {
 	Nickname    string `form:"nickname" json:"nickname" binding:"omitempty,min=2,max=30"`
 	OldPassword string `form:"old_password" json:"old_password"`
 	NewPassword string `form:"new_password" json:"new_password" binding:"omitempty,min=2,max=30"`
 }
 
 // Change 用户修改信息
-func (service *UserModifyService) UserModify(ID uint) serializer.Response {
-	var user model.User
+func (service *AdminModifyService) AdminModify(ID uint) serializer.Response {
+	var admin model.Admin
 	//找到用户
-	err := model.DB.First(&user, ID).Error
+	err := model.DB.First(&admin, ID).Error
 	if err != nil {
 		return serializer.Response{
 			Code:  404,
@@ -27,11 +27,11 @@ func (service *UserModifyService) UserModify(ID uint) serializer.Response {
 
 	// 如果更新了密码
 	if service.NewPassword != "" {
-		if user.CheckPassword(service.OldPassword) == false {
+		if admin.CheckPassword(service.OldPassword) == false {
 			return serializer.ParamErr("账号或密码错误", nil)
 		}
 
-		if err := user.SetPassword(service.NewPassword); err != nil {
+		if err := admin.SetPassword(service.NewPassword); err != nil {
 			return serializer.Err(
 				serializer.CodeEncryptError,
 				"密码加密失败",
@@ -39,9 +39,9 @@ func (service *UserModifyService) UserModify(ID uint) serializer.Response {
 			)
 		}
 	}
-	user.Nickname = service.Nickname
+	admin.Nickname = service.Nickname
 
-	err = model.DB.Model(&user).Update(&user).Error
+	err = model.DB.Model(&admin).Update(&admin).Error
 	if err != nil {
 		return serializer.Response{
 			Code:  serializer.CodeDBError,
@@ -50,6 +50,6 @@ func (service *UserModifyService) UserModify(ID uint) serializer.Response {
 		}
 	}
 	return serializer.Response{
-		Data: serializer.BuildUser(user),
+		Data: serializer.BuildAdmin(admin),
 	}
 }

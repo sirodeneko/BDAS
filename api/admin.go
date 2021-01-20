@@ -39,3 +39,44 @@ func AdminLogout(c *gin.Context) {
 		Msg:  "登出成功",
 	})
 }
+
+// AdminModify 管理员修改自己基本信息
+func AdminModify(c *gin.Context) {
+	var service service.AdminModifyService
+	var ID uint
+
+	if user, ok := CurrentUser(c).(*model.Admin); ok {
+		ID = user.ID
+	} else {
+		c.JSON(200, serializer.CheckLogin())
+	}
+
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.AdminModify(ID)
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
+}
+
+// AdminModifyUser 管理员修改普通用户信息
+func AdminModifyUser(c *gin.Context) {
+	var service service.AdminModifyUserService
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.AdminModifyUser()
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
+}
+
+// AdminModifyUniversity 管理员修改学校用户信息
+func AdminModifyUniversity(c *gin.Context) {
+	var service service.AdminModifyUniversityService
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.AdminModifyUniversity()
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
+}

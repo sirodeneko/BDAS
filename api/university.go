@@ -39,3 +39,22 @@ func UniversityLogout(c *gin.Context) {
 		Msg:  "登出成功",
 	})
 }
+
+// UniversityModify 学校基本信息修改
+func UniversityModify(c *gin.Context) {
+	var service service.UniversityModifyService
+	var ID uint
+
+	if user, ok := CurrentUser(c).(*model.University); ok {
+		ID = user.ID
+	} else {
+		c.JSON(200, serializer.CheckLogin())
+	}
+
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.UniversityModify(ID)
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
+}

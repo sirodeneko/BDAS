@@ -75,7 +75,10 @@ func AuthAdminRequired() gin.HandlerFunc {
 func AuthUniversityRequired() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if user, _ := c.Get("user"); user != nil {
-			if _, ok := user.(*model.University); ok {
+			if u, ok := user.(*model.University); ok {
+				if u.Status == model.Suspend {
+					c.JSON(200, serializer.CheckSuspend())
+				}
 				c.Next()
 				return
 			}

@@ -41,16 +41,20 @@ func NewRouter() *gin.Engine {
 		authAdmin.Use(middleware.AuthAdminRequired())
 		{
 			// Admin Routing
-			authAdmin.GET("admin/me", api.UserMe)
-			authAdmin.DELETE("admin/logout", api.UserLogout)
-			authAdmin.POST("university/register", api.UserRegister)
+			authAdmin.GET("admin/me", api.AdminMe)
+			authAdmin.DELETE("admin/logout", api.AdminLogout)
+			authAdmin.POST("university/register", api.UniversityRegister)
+			authAdmin.PUT("admin/modify/admin", api.AdminModify)
+			authAdmin.PUT("admin/modify/user", api.AdminModifyUser)
+			authAdmin.PUT("admin/modify/user", api.AdminModifyUniversity)
 		}
 		authUniversity := v1.Group("")
 		authUniversity.Use(middleware.AuthUniversityRequired())
 		{
 			// University Routing
-			authUniversity.GET("university/me", api.UserMe)
-			authUniversity.DELETE("university/logout", api.UserLogout)
+			authUniversity.GET("university/me", api.UniversityMe)
+			authUniversity.DELETE("university/logout", api.UniversityLogout)
+			authUniversity.PUT("university/modify/university", api.UniversityModify)
 		}
 	}
 	return r
