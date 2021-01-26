@@ -28,6 +28,11 @@ func NewRouter() *gin.Engine {
 		// 用户注册
 		v1.POST("user/register", api.UserRegister)
 		//v1.POST("aaa",api.AdminRegister)
+
+		// 文件上传
+		v1.POST("file/upload", api.FileUpload)
+		// 文件下载
+		v1.GET("file/download/:filename", api.FileDownload)
 		// 需要登录保护的
 		authUser := v1.Group("")
 		authUser.Use(middleware.AuthUserRequired())

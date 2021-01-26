@@ -63,7 +63,7 @@ func (service *LoginService) universityLogin(c *gin.Context) serializer.Response
 	if service.UniversityName == "" {
 		return serializer.ParamErr("学校名称为空", nil)
 	}
-	if err := model.DB.Where("user_name = ? and university_name = ？", service.UserName, service.UniversityName).First(&university).Error; err != nil {
+	if err := model.DB.Where("user_name = ? and university_name = ? ", service.UserName, service.UniversityName).First(&university).Error; err != nil {
 		return serializer.ParamErr("账号或密码错误", nil)
 	}
 
