@@ -26,11 +26,14 @@ const (
 func GetUserWithType(uType string, ID interface{}) (interface{}, error) {
 	switch uType {
 	case AdminType:
-		return GetAdmin(ID)
+		admin, err := GetAdmin(ID)
+		return &admin, err
 	case UserType:
-		return GetUser(ID)
+		user, err := GetUser(ID)
+		return &user, err
 	case UniversityType:
-		return GetUniversity(ID)
+		university, err := GetUniversity(ID)
+		return &university, err
 	default:
 		err := errors.New("类型匹配失败")
 		util.Log().Warning(uType+"类型匹配失败", err)

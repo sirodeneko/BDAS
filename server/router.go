@@ -27,7 +27,7 @@ func NewRouter() *gin.Engine {
 
 		// 用户注册
 		v1.POST("user/register", api.UserRegister)
-
+		//v1.POST("aaa",api.AdminRegister)
 		// 需要登录保护的
 		authUser := v1.Group("")
 		authUser.Use(middleware.AuthUserRequired())
@@ -46,7 +46,7 @@ func NewRouter() *gin.Engine {
 			authAdmin.POST("university/register", api.UniversityRegister)
 			authAdmin.PUT("admin/modify/admin", api.AdminModify)
 			authAdmin.PUT("admin/modify/user", api.AdminModifyUser)
-			authAdmin.PUT("admin/modify/user", api.AdminModifyUniversity)
+			authAdmin.PUT("admin/modify/university", api.AdminModifyUniversity)
 		}
 		authUniversity := v1.Group("")
 		authUniversity.Use(middleware.AuthUniversityRequired())

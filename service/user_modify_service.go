@@ -9,7 +9,7 @@ import (
 type UserModifyService struct {
 	Nickname    string `form:"nickname" json:"nickname" binding:"omitempty,min=2,max=30"`
 	OldPassword string `form:"old_password" json:"old_password"`
-	NewPassword string `form:"new_password" json:"new_password" binding:"omitempty,min=2,max=30"`
+	NewPassword string `form:"new_password" json:"new_password" binding:"omitempty,min=8,max=40"`
 }
 
 // Change 用户修改信息
@@ -39,7 +39,9 @@ func (service *UserModifyService) UserModify(ID uint) serializer.Response {
 			)
 		}
 	}
-	user.Nickname = service.Nickname
+	if service.Nickname != "" {
+		user.Nickname = service.Nickname
+	}
 
 	err = model.DB.Model(&user).Update(&user).Error
 	if err != nil {

@@ -49,6 +49,7 @@ func (service *AdminModifyUserService) AdminModifyUser() serializer.Response {
 			Error: err.Error(),
 		}
 	}
+	model.DB.Find(&user)
 	return serializer.Response{
 		Data: serializer.BuildUser(user),
 	}

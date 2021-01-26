@@ -49,6 +49,7 @@ func (service *AdminModifyUniversityService) AdminModifyUniversity() serializer.
 			Error: err.Error(),
 		}
 	}
+	model.DB.Find(&university)
 	return serializer.Response{
 		Data: serializer.BuildUniversity(university),
 	}

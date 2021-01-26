@@ -40,6 +40,7 @@ func (service *LoginService) adminLogin(c *gin.Context) serializer.Response {
 
 	return serializer.BuildAdminResponse(admin)
 }
+
 func (service *LoginService) userLogin(c *gin.Context) serializer.Response {
 	var user model.User
 
@@ -59,6 +60,9 @@ func (service *LoginService) userLogin(c *gin.Context) serializer.Response {
 func (service *LoginService) universityLogin(c *gin.Context) serializer.Response {
 	var university model.University
 
+	if service.UniversityName == "" {
+		return serializer.ParamErr("学校名称为空", nil)
+	}
 	if err := model.DB.Where("user_name = ? and university_name = ？", service.UserName, service.UniversityName).First(&university).Error; err != nil {
 		return serializer.ParamErr("账号或密码错误", nil)
 	}
