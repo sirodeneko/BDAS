@@ -33,6 +33,7 @@ func NewRouter() *gin.Engine {
 		v1.POST("file/upload", api.FileUpload)
 		// 文件下载
 		v1.GET("file/download/:filename", api.FileDownload)
+
 		// 需要登录保护的
 		authUser := v1.Group("")
 		authUser.Use(middleware.AuthUserRequired())
