@@ -70,3 +70,14 @@ func UserModify(c *gin.Context) {
 		c.JSON(200, ErrorResponse(err))
 	}
 }
+func UserAuth(c *gin.Context) {
+	var service service.UserAuthService
+
+	user := CurrentUser(c).(*model.User)
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.UserAuth(user.ID)
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
+}

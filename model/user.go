@@ -22,6 +22,8 @@ const (
 	Active string = "active"
 	// Inactive 未激活用户
 	Inactive string = "inactive"
+	// Authenticating 认证中用户
+	Authenticating string = "authenticating"
 	// Suspend 被封禁用户
 	Suspend string = "suspend"
 )

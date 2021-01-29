@@ -42,6 +42,7 @@ func NewRouter() *gin.Engine {
 			authUser.GET("user/me", api.UserMe)
 			authUser.DELETE("user/logout", api.UserLogout)
 			authUser.PUT("user/modify/user", api.UserModify)
+			authUser.POST("user/identity/auth", api.UserAuth)
 		}
 		authAdmin := v1.Group("")
 		authAdmin.Use(middleware.AuthAdminRequired())
@@ -53,6 +54,7 @@ func NewRouter() *gin.Engine {
 			authAdmin.PUT("admin/modify/admin", api.AdminModify)
 			authAdmin.PUT("admin/modify/user", api.AdminModifyUser)
 			authAdmin.PUT("admin/modify/university", api.AdminModifyUniversity)
+			authUser.GET("admin/msg/list", api.MsgList)
 		}
 		authUniversity := v1.Group("")
 		authUniversity.Use(middleware.AuthUniversityRequired())

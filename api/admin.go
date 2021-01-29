@@ -80,3 +80,14 @@ func AdminModifyUniversity(c *gin.Context) {
 		c.JSON(200, ErrorResponse(err))
 	}
 }
+
+// MsgList 获取消息列表
+func MsgList(c *gin.Context) {
+	var service service.MsgListService
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.MsgList()
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
+}

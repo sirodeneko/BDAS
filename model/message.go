@@ -18,7 +18,7 @@ type Message struct {
 
 type StudentAcMsg struct {
 	gorm.Model
-	UserId       int
+	UserId       uint
 	Name         string
 	CardCode     string
 	FrontFaceImg string
