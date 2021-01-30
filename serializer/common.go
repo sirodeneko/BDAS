@@ -77,3 +77,19 @@ func ParamErr(msg string, err error) Response {
 	}
 	return Err(CodeParamErr, msg, err)
 }
+
+// DataList 基础列表结构
+type DataList struct {
+	Items interface{} `json:"items"`
+	Total uint        `json:"total"`
+}
+
+// BuildListResponse 列表构建器
+func BuildListResponse(items interface{}, total uint) Response {
+	return Response{
+		Data: DataList{
+			Items: items,
+			Total: total,
+		},
+	}
+}
