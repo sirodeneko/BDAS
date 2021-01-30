@@ -91,3 +91,14 @@ func MsgList(c *gin.Context) {
 		c.JSON(200, ErrorResponse(err))
 	}
 }
+
+// AdminAuthUser 认证用户
+func AdminAuthUser(c *gin.Context) {
+	var service service.AdminAuthUserService
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.AdminAuthUser()
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
+}

@@ -13,6 +13,7 @@ type User struct {
 	Nickname       string
 	Status         string
 	CardCode       string
+	Name           string
 }
 
 const (

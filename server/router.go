@@ -54,7 +54,8 @@ func NewRouter() *gin.Engine {
 			authAdmin.PUT("admin/modify/admin", api.AdminModify)
 			authAdmin.PUT("admin/modify/user", api.AdminModifyUser)
 			authAdmin.PUT("admin/modify/university", api.AdminModifyUniversity)
-			authUser.GET("admin/msg/list", api.MsgList)
+			authAdmin.GET("admin/msg/list", api.MsgList)
+			authAdmin.PUT("admin/authenticated/user", api.AdminAuthUser)
 		}
 		authUniversity := v1.Group("")
 		authUniversity.Use(middleware.AuthUniversityRequired())
