@@ -29,3 +29,15 @@ func HiddenCharacters(s string) string {
 	}
 	return string(b)
 }
+
+func IntToSex(i uint) string {
+	if i == 0 {
+		return "男"
+	} else {
+		return "女"
+	}
+}
+
+func Int64ToStr(timestamp int64) string {
+	return time.Unix(timestamp, 0).Format("2006年01月02日")
+}
