@@ -102,3 +102,14 @@ func AdminAuthUser(c *gin.Context) {
 		c.JSON(200, ErrorResponse(err))
 	}
 }
+
+// AdminACStudent 管理员通过学校的认证请求
+func AdminACStudent(c *gin.Context) {
+	//var service service.AdminACStudentService
+	//if err := c.ShouldBind(&service); err == nil {
+	//	res := service.AdminACStudent(c)
+	//	c.JSON(200, res)
+	//} else {
+	//	c.JSON(200, ErrorResponse(err))
+	//}
+}

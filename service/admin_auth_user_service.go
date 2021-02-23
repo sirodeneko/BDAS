@@ -46,6 +46,8 @@ func (service *AdminAuthUserService) AdminAuthUser() serializer.Response {
 	if err != nil {
 		return serializer.DBErr("用户信息保存失败", err)
 	}
+
+	model.DB.Delete(message.StudentAcMsg)
 	// 删除message对象 不删除关联对象
 	model.DB.Delete(message)
 	// 删除其关联的标记，不删除任何对象

@@ -25,8 +25,8 @@ type StudentAuthService struct {
 	StudentAvatar     string `json:"student_avatar" form:"student_avatar" binding:"required"`         // 照片
 }
 
-func (service *StudentAuthService) StudentAuth(user *model.University) serializer.Response {
-	if user.UniversityName != service.University {
+func (service *StudentAuthService) StudentAuth(university *model.University) serializer.Response {
+	if university.UniversityName != service.University {
 		return serializer.Response{
 			Code: 403,
 			Msg:  "权限不足，无权颁发其他学校学历证书",
@@ -35,10 +35,10 @@ func (service *StudentAuthService) StudentAuth(user *model.University) serialize
 
 	var mssage = model.Message{
 		MsgType:      model.StudentAccreditation,
-		Description:  fmt.Sprintf("%s 请求学生认证", user.UniversityName),
+		Description:  fmt.Sprintf("%s 请求学生认证", university.UniversityName),
 		StudentAcMsg: model.StudentAcMsg{},
 		EducationalAcMsg: model.EducationalAcMsg{
-			UniversityID:      user.ID,
+			UniversityID:      university.ID,
 			Name:              service.Name,
 			Sex:               service.Sex,
 			Ethnic:            service.Ethnic,
@@ -62,11 +62,11 @@ func (service *StudentAuthService) StudentAuth(user *model.University) serialize
 		return serializer.DBErr("消息保存失败", err)
 	}
 
-	user.Status = model.Authenticating
-	err = model.DB.Save(&user).Error
-	if err != nil {
-		return serializer.DBErr("消息保存失败", err)
-	}
+	//university.Status = model.Authenticating
+	//err = model.DB.Save(&university).Error
+	//if err != nil {
+	//	return serializer.DBErr("消息保存失败", err)
+	//}
 	return serializer.Response{
 		Code: 0,
 		Msg:  "提交成功，请等待审核",

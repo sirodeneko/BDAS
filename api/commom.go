@@ -31,3 +31,36 @@ func FileDownload(c *gin.Context) {
 		c.JSON(200, res)
 	}
 }
+
+// InboxList 获取收件箱邮件
+func InboxList(c *gin.Context) {
+	var service service.InboxListService
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.InboxList(c)
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
+}
+
+// InboxListUnread 获取未读邮件的数量
+func InboxListUnread(c *gin.Context) {
+	var service service.InboxListUnreadService
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.InboxListUnread(c)
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
+}
+
+// InboxLooked 查看邮件
+func InboxLooked(c *gin.Context) {
+	var service service.InboxLookedService
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.InboxLooked()
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
+}

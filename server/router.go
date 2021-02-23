@@ -34,6 +34,13 @@ func NewRouter() *gin.Engine {
 		// 文件下载
 		v1.GET("file/download/:filename", api.FileDownload)
 
+		// 获取通知
+		v1.GET("inbox/list", api.InboxList)
+		// 获取是否有未读邮件
+		v1.GET("inbox/list/unread", api.InboxListUnread)
+		// 读取邮件（消除未读标记）
+		v1.GET("inbox/looked", api.InboxLooked)
+
 		// 需要登录保护的
 		authUser := v1.Group("")
 		authUser.Use(middleware.AuthUserRequired())
@@ -56,6 +63,7 @@ func NewRouter() *gin.Engine {
 			authAdmin.PUT("admin/modify/university", api.AdminModifyUniversity)
 			authAdmin.GET("admin/msg/list", api.MsgList)
 			authAdmin.PUT("admin/authenticated/user", api.AdminAuthUser)
+			authAdmin.PUT("admin/academic/certification", api.AdminACStudent)
 		}
 		authUniversity := v1.Group("")
 		authUniversity.Use(middleware.AuthUniversityRequired())
