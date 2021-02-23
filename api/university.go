@@ -58,3 +58,23 @@ func UniversityModify(c *gin.Context) {
 		c.JSON(200, ErrorResponse(err))
 	}
 }
+
+// StudentAuth 学校进行学生的学历信息提交
+func StudentAuth(c *gin.Context) {
+	var service service.StudentAuthService
+
+	var user *model.University
+
+	if u, ok := CurrentUser(c).(*model.University); ok {
+		user = u
+	} else {
+		c.JSON(200, serializer.CheckLogin())
+	}
+
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.StudentAuth(user)
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
+}

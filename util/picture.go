@@ -77,7 +77,7 @@ func getFont() *truetype.Font {
 	}
 	return font
 }
-func (picInfo *PictureInfo) createImg() (string, error) {
+func (picInfo *PictureInfo) CreateImg() (string, error) {
 	var err error
 	pngimg := getBackgroundImg() //背景图
 	font := getFont()            //字体文件
@@ -133,7 +133,7 @@ func (picInfo *PictureInfo) createImg() (string, error) {
 
 	draw.Draw(img, img.Bounds(), sealimg, image.Point{X: -1700, Y: -2800}, draw.Over)
 	//保存到新文件中
-	newFileName := uuid.Must(uuid.NewRandom()).String() + "jpg"
+	newFileName := uuid.Must(uuid.NewRandom()).String() + ".jpg"
 	newfile, _ := os.Create(SaveURL + newFileName)
 	defer newfile.Close()
 

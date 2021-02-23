@@ -1,0 +1,74 @@
+package service
+
+import (
+	"fmt"
+	"singo/model"
+	"singo/serializer"
+	"time"
+)
+
+type StudentAuthService struct {
+	Name              string `json:"name" form:"name" binding:"required"`
+	Sex               uint   `json:"sex" form:"sex" binding:"required"`                               // 0 男 1女
+	Ethnic            string `json:"ethnic" form:"ethnic" binding:"required"`                         // 民族
+	Birthday          int64  `json:"birthday" form:"birthday" binding:"required"`                     // 生日
+	CardCode          string `json:"card_code" form:"card_code" binding:"required"`                   // 身份证号
+	EducationCategory string `json:"education_category" form:"education_category" binding:"required"` // 学历类别
+	Level             string `json:"level" form:"level" binding:"required"`                           // 层次
+	University        string `json:"university" form:"university" binding:"required"`                 // 学校
+	Professional      string `json:"professional" form:"professional" binding:"required"`             // 专业
+	LearningFormat    string `json:"learning_format" form:"learning_format" binding:"required"`       // 学习形式
+	EducationalSystem string `json:"educational_system" form:"educational_system" binding:"required"` // 学制
+	AdmissionDate     string `json:"admission_date" form:"admission_date" binding:"required"`         // 入学日期
+	GraduationDate    string `json:"graduation_date" form:"graduation_date" binding:"required"`       // 毕业日期
+	Status            string `json:"status" form:"status" binding:"required"`                         // 状态（是否结业）
+	StudentAvatar     string `json:"student_avatar" form:"student_avatar" binding:"required"`         // 照片
+}
+
+func (service *StudentAuthService) StudentAuth(user *model.University) serializer.Response {
+	if user.UniversityName != service.University {
+		return serializer.Response{
+			Code: 403,
+			Msg:  "权限不足，无权颁发其他学校学历证书",
+		}
+	}
+
+	var mssage = model.Message{
+		MsgType:      model.StudentAccreditation,
+		Description:  fmt.Sprintf("%s 请求学生认证", user.UniversityName),
+		StudentAcMsg: model.StudentAcMsg{},
+		EducationalAcMsg: model.EducationalAcMsg{
+			UniversityID:      user.ID,
+			Name:              service.Name,
+			Sex:               service.Sex,
+			Ethnic:            service.Ethnic,
+			Birthday:          time.Unix(service.Birthday, 0),
+			CardCode:          service.CardCode,
+			EducationCategory: service.EducationCategory,
+			Level:             service.Level,
+			University:        service.University,
+			Professional:      service.Professional,
+			LearningFormat:    service.LearningFormat,
+			EducationalSystem: service.EducationalSystem,
+			AdmissionDate:     service.AdmissionDate,
+			GraduationDate:    service.GraduationDate,
+			Status:            service.Status,
+			StudentAvatar:     service.StudentAvatar,
+		},
+	}
+
+	err := model.DB.Save(&mssage).Error
+	if err != nil {
+		return serializer.DBErr("消息保存失败", err)
+	}
+
+	user.Status = model.Authenticating
+	err = model.DB.Save(&user).Error
+	if err != nil {
+		return serializer.DBErr("消息保存失败", err)
+	}
+	return serializer.Response{
+		Code: 0,
+		Msg:  "提交成功，请等待审核",
+	}
+}

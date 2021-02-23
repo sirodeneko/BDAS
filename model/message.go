@@ -27,8 +27,9 @@ type StudentAcMsg struct {
 
 type EducationalAcMsg struct {
 	gorm.Model
-	Name              string
-	Sex               uint      // 0 男 1女
+	UniversityID      uint      // 消息发送者的id
+	Name              string    // 姓名
+	Sex               uint      // 1男 2女
 	Ethnic            string    // 民族
 	Birthday          time.Time // 生日
 	CardCode          string    // 身份证号
