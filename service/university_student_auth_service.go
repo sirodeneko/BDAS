@@ -34,7 +34,7 @@ func (service *StudentAuthService) StudentAuth(university *model.University) ser
 	}
 
 	var mssage = model.Message{
-		MsgType:      model.StudentAccreditation,
+		MsgType:      model.EducationalQualifications,
 		Description:  fmt.Sprintf("%s 请求学生认证", university.UniversityName),
 		StudentAcMsg: model.StudentAcMsg{},
 		EducationalAcMsg: model.EducationalAcMsg{

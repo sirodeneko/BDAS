@@ -5,6 +5,7 @@ import (
 	"singo/cache"
 	"singo/model"
 	"singo/util"
+	"singo/vnt"
 
 	"github.com/joho/godotenv"
 )
@@ -25,4 +26,7 @@ func Init() {
 	// 连接数据库
 	model.Database(os.Getenv("MYSQL_DSN"))
 	cache.Redis()
+
+	// 读取配置
+	vnt.VntInit()
 }
