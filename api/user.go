@@ -81,3 +81,40 @@ func UserAuth(c *gin.Context) {
 		c.JSON(200, ErrorResponse(err))
 	}
 }
+
+// Certification 用户获取自己的学历认证文件
+func Certification(c *gin.Context) {
+	var service service.CertificationService
+
+	user := CurrentUser(c).(*model.User)
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.Certification(user)
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
+}
+
+// CertificationInfo 通过id获取详细的文件信息
+func CertificationInfo(c *gin.Context) {
+	var service service.CertificationInfoService
+
+	user := CurrentUser(c).(*model.User)
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.CertificationInfo(user)
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
+}
+
+// CertificationFile 下载证书
+func CertificationFile(c *gin.Context) {
+	var service service.CertificationFileDownloadService
+	FileName := c.Param("filename")
+	user := CurrentUser(c).(*model.User)
+	res := service.CertificationFileDownload(c, user, FileName)
+	if res.Code != 0 {
+		c.JSON(200, res)
+	}
+}

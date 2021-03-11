@@ -144,7 +144,7 @@ func GetTransactionByHash(txHash string) (string, error) {
 func createRequest(data []byte) ([]byte, error) {
 	req := requests.Requests()
 	req.Header.Set("Content-Type", "application/json")
-	resp, err := req.Post(url, string(data))
+	resp, err := req.PostJson(url, string(data))
 	if err != nil {
 		return nil, err
 	}

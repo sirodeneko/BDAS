@@ -9,4 +9,5 @@ func migration() {
 	DB.AutoMigrate(&Message{}, &StudentAcMsg{}, &EducationalAcMsg{})
 	DB.AutoMigrate(&University{})
 	DB.AutoMigrate(&Inbox{})
+	DB.AutoMigrate(&Certification{})
 }

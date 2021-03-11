@@ -6,6 +6,7 @@ import (
 	"path"
 	"regexp"
 	"singo/serializer"
+	"singo/util"
 )
 
 type FileDownloadService struct{}
@@ -26,7 +27,7 @@ func (service *FileDownloadService) FileDownload(c *gin.Context, fileName string
 		return serializer.ParamErr("文件名不合法", nil)
 	}
 	c.Writer.Header().Add("Content-Disposition", fmt.Sprintf("attachment; filename=%s", fileName))
-	dst := path.Join("./static/file", fileName)
+	dst := path.Join(util.FileURL, fileName)
 	c.File(dst)
 	return serializer.Response{Code: 0}
 }

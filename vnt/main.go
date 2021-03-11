@@ -8,38 +8,40 @@ import (
 	"github.com/vntchain/go-vnt/crypto"
 	"math/big"
 	"os"
+	"strconv"
 )
 
 var privateKeyStr string
-var toAddressStr string
-var formAddressStr string
+var ToAddressStr string
+var FormAddressStr string
 var privateKey *ecdsa.PrivateKey
 var toAddress common.Address
 
 func VntInit() {
 	vntRequestInit()
 	privateKeyStr = os.Getenv("PRIVSTE_KEY")
-	toAddressStr = os.Getenv("TO_ADDRESS")
-	formAddressStr = os.Getenv("FORM_ADDRESS")
+	ToAddressStr = os.Getenv("TO_ADDRESS")
+	FormAddressStr = os.Getenv("FORM_ADDRESS")
 	privateKey, _ = crypto.HexToECDSA(privateKeyStr)
-	toAddress = common.HexToAddress(toAddressStr)
+	toAddress = common.HexToAddress(ToAddressStr)
 }
 
-func sign(data []byte) (string, error) {
+func Sign(data []byte, nonceHex string) string {
 	value := big.NewInt(0)     // in wei (1 eth)
 	gasLimit := uint64(500000) // in units
 	gasPrice := big.NewInt(500000000000)
 
-	tx := types.NewTransaction(10, toAddress, value, gasLimit, gasPrice, data)
+	val := nonceHex[2:]
+	nonce, _ := strconv.ParseUint(val, 16, 32)
+
+	tx := types.NewTransaction(nonce, toAddress, value, gasLimit, gasPrice, data)
 	signer := types.NewHubbleSigner(big.NewInt(2))
 
-	signedTx, err := types.SignTx(tx, signer, privateKey)
-	if err != nil {
-		return "", err
-	}
+	signedTx, _ := types.SignTx(tx, signer, privateKey)
+
 	ts := types.Transactions{signedTx}
 	rawTxBytes := ts.GetRlp(0)
 	rawTxHex := hex.EncodeToString(rawTxBytes)
 
-	return "0x" + rawTxHex, err
+	return "0x" + rawTxHex
 }

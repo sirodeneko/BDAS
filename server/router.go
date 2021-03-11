@@ -41,6 +41,11 @@ func NewRouter() *gin.Engine {
 		// 读取邮件（消除未读标记）
 		v1.GET("inbox/looked", api.InboxLooked)
 
+		// 认证1：游客根据地址和学生身份证号和姓名进行信息查询
+		v1.GET("certificate/address", api.CertificateWithAddress)
+		// 认证2：游客根据文件和编号查询真伪
+		v1.GET("certificate/file", api.CertificateWithFile)
+
 		// 需要登录保护的
 		authUser := v1.Group("")
 		authUser.Use(middleware.AuthUserRequired())
@@ -50,6 +55,9 @@ func NewRouter() *gin.Engine {
 			authUser.DELETE("user/logout", api.UserLogout)
 			authUser.PUT("user/modify/user", api.UserModify)
 			authUser.POST("user/identity/auth", api.UserAuth)
+			authUser.GET("user/certification/list", api.Certification)
+			authUser.GET("user/certification/getInfo", api.CertificationInfo)
+			authUser.GET("user/certification/file/:filename", api.CertificationFile)
 		}
 		authAdmin := v1.Group("")
 		authAdmin.Use(middleware.AuthAdminRequired())
@@ -64,6 +72,7 @@ func NewRouter() *gin.Engine {
 			authAdmin.GET("admin/msg/list", api.MsgList)
 			authAdmin.PUT("admin/authenticated/user", api.AdminAuthUser)
 			authAdmin.PUT("admin/academic/certification", api.AdminACStudent)
+
 		}
 		authUniversity := v1.Group("")
 		authUniversity.Use(middleware.AuthUniversityRequired())

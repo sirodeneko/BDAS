@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"strconv"
 	"time"
 
 	"github.com/golang/freetype"
@@ -23,10 +24,11 @@ const (
 	left          = 200
 	interval      = 140
 	baseFontSize  = 35
-	backgroundURL = "./static/normal/background.png"
-	sealURL       = "./static/normal/seal.png"
-	fontURL       = "./static/normal/华文楷体.ttf"
-	SaveURL       = "./static/certificate/"
+	backgroundURL = "static/normal/background.png"
+	sealURL       = "static/normal/seal.png"
+	fontURL       = "static/normal/华文楷体.ttf"
+	SaveURL       = "static/certificate/"
+	FileURL       = "static/file/"
 )
 
 type PictureInfo struct {
@@ -46,6 +48,9 @@ type PictureInfo struct {
 	GraduationDate    string `json:"graduation_date"`    // 毕业日期
 	Status            string `json:"status"`             // 状态（是否结业）
 	StudentAvatar     string `json:"student_avatar"`     // 照片
+	FileID            uint   `json:"file_id"`            // 编号
+	FileUrl           string `json:"file_url"`           // 图片地址
+	FileHash          string `json:"file_hash"`          // 图片哈希
 }
 
 var backgroundImg image.Image
@@ -105,12 +110,13 @@ func (picInfo *PictureInfo) CreateImg() (string, error) {
 	drawText(img, font, baseFontSize, left, top+11*interval, "入学日期："+picInfo.AdmissionDate)
 	drawText(img, font, baseFontSize, left, top+12*interval, "毕业日期："+picInfo.GraduationDate)
 	drawText(img, font, baseFontSize, left, top+13*interval, "状        态："+picInfo.Status)
-	drawText(img, font, baseFontSize, left, top+14*interval, "报告生成日期："+Int64ToStr(time.Now().Unix()))
-	drawText(img, font, baseFontSize+5, left, top+15*interval, "以上学历情况属实，专此认证")
+	drawText(img, font, baseFontSize, left, top+14*interval, "编        号："+strconv.Itoa(int(picInfo.FileID)))
+	drawText(img, font, baseFontSize, left, top+15*interval, "报告生成日期："+Int64ToStr(time.Now().Unix()))
+	drawText(img, font, baseFontSize+5, left, top+16*interval, "以上学历情况属实，专此认证")
 	drawText(img, font, baseFontSize+7, 1550, 3150, "DBAS学历认证系统")
 
 	// 图片处理
-	tou, _ := os.Open("./static/file/" + picInfo.StudentAvatar)
+	tou, _ := os.Open(FileURL + picInfo.StudentAvatar)
 	defer tou.Close()
 	var touimg image.Image
 	if path.Ext(picInfo.StudentAvatar) == ".png" {
