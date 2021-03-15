@@ -2,7 +2,6 @@ package scheduler
 
 import (
 	"encoding/json"
-	"os"
 	"singo/model"
 	"singo/util"
 	"singo/vnt"

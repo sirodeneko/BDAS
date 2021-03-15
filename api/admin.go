@@ -113,3 +113,14 @@ func AdminACStudent(c *gin.Context) {
 		c.JSON(200, ErrorResponse(err))
 	}
 }
+
+// 管理员通过用户类型和id查询到user
+func AdminGetUser(c *gin.Context) {
+	var service service.AdminGetUserService
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.AdminGetUser()
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
+}
