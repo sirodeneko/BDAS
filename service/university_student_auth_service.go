@@ -33,7 +33,7 @@ func (service *StudentAuthService) StudentAuth(university *model.University) ser
 		}
 	}
 
-	var mssage = model.Message{
+	var message = model.Message{
 		MsgType:      model.EducationalQualifications,
 		Description:  fmt.Sprintf("%s 请求学生认证", university.UniversityName),
 		StudentAcMsg: model.StudentAcMsg{},
@@ -57,7 +57,7 @@ func (service *StudentAuthService) StudentAuth(university *model.University) ser
 		},
 	}
 
-	err := model.DB.Save(&mssage).Error
+	err := model.DB.Save(&message).Error
 	if err != nil {
 		return serializer.DBErr("消息保存失败", err)
 	}
@@ -67,6 +67,19 @@ func (service *StudentAuthService) StudentAuth(university *model.University) ser
 	//if err != nil {
 	//	return serializer.DBErr("消息保存失败", err)
 	//}
+
+	sc := model.Scheduler{
+		UniversityName:   message.EducationalAcMsg.University,
+		UniversityUserID: message.EducationalAcMsg.UniversityID,
+		MessageID:        message.ID,
+		CertificationID:  0,
+		Status:           model.WAIT,
+	}
+	err = model.DB.Create(&sc).Error
+	if err != nil {
+		return serializer.DBErr("保存失败", err)
+	}
+
 	return serializer.Response{
 		Code: 0,
 		Msg:  "提交成功，请等待审核",

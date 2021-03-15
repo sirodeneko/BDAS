@@ -4,10 +4,13 @@ import (
 	"singo/model"
 	"singo/scheduler"
 	"singo/serializer"
+	"singo/util"
 )
 
 type AdminACStudentService struct {
 	MsgID string `json:"msg_id" form:"msg_id" binding:"required"`
+	Op    uint   `json:"op" form:"op"`
+	Msg   string `json:"msg" form:"msg"`
 }
 
 // var jsonKey string
@@ -30,22 +33,44 @@ func (service *AdminACStudentService) AdminACStudent() serializer.Response {
 		}
 	}
 
-	sc := model.Scheduler{
-		UniversityName:   message.EducationalAcMsg.University,
-		UniversityUserID: message.EducationalAcMsg.UniversityID,
-		MessageID:        message.ID,
-		CertificationID:  0,
-		Status:           model.WAIT,
+	var sc model.Scheduler
+
+	// 查询被软删除的记录
+	err = model.DB.Unscoped().Where("message_id = ? ", message.ID).First(&sc).Error
+	if err != nil {
+		util.Log().Error("数据库查询失败: %v", err)
+		return serializer.DBErr("数据库查询失败", err)
 	}
 
-	err = model.DB.Create(&sc).Error
-	if err != nil {
-		return serializer.Response{
-			Code:  500,
-			Msg:   "提交失败",
-			Error: err.Error(),
+	// 处理不通过请求
+	if service.Op != 0 {
+		sc.Status = model.NOPASS
+		err = model.DB.Save(&sc).Error
+
+		if err != nil {
+			return serializer.DBErr("用户信息保存失败", err)
+		} else {
+			var inbox = model.Inbox{
+				UserType: model.UniversityType,
+				UserID:   message.EducationalAcMsg.UniversityID,
+				Body: "您好，您的学生学历认证请求经管理员审核<div style=\"color:red;\">不通过</div>，原因如下：<br>" +
+					service.Msg +
+					"<br>感谢您使用本平台，祝您生活愉快",
+				Title: "学历认证不通过",
+				State: 0,
+			}
+			model.DB.Save(&inbox)
+			return serializer.Response{
+				Code: 0,
+				Msg:  "通过",
+			}
 		}
 	}
+
+	// 处理通过请求
+
+	sc.Status = model.EXECUTING
+	model.DB.Save(&sc)
 
 	err = scheduler.Submit(&message)
 	if err != nil {
@@ -56,63 +81,6 @@ func (service *AdminACStudentService) AdminACStudent() serializer.Response {
 		}
 	}
 
-	//pictureInfo := model2PictureInfo(&message.EducationalAcMsg)
-	//
-	//// 写入数据库
-	//certification := model.Certification{
-	//	CardCode:     pictureInfo.CardCode,
-	//	Level:        pictureInfo.Level,
-	//	Professional: pictureInfo.Professional,
-	//	Name:         pictureInfo.Name,
-	//}
-	//err = model.DB.Save(&certification).Error
-	//if err != nil {
-	//	return serializer.DBErr("信息保存失败", err)
-	//}
-
-	//pictureInfo.FileID = certification.ID
-	//
-	//url, err := pictureInfo.CreateImg()
-	//if err != nil {
-	//	return serializer.Response{
-	//		Code:  500,
-	//		Data:  nil,
-	//		Msg:   "认证文件生成失败",
-	//		Error: err.Error(),
-	//	}
-	//}
-	//
-	//pictureInfo.FileUrl = url
-	//pictureInfo.FileHash = util.FileSHA256(util.SaveURL + url)
-	//
-	//pictureInfoByte, _ := json.Marshal(pictureInfo)
-	//pictureInfCrypt := util.AesEncrypt(string(pictureInfoByte), getJsonKey())
-	//
-	//// 获取nonce
-	//nonceHex, err := vnt.GetTransactionCount(vnt.FormAddressStr)
-	//if err != nil {
-	//	return serializer.Response{
-	//		Code:  5000,
-	//		Data:  nil,
-	//		Msg:   "区块链网络错误",
-	//		Error: err.Error(),
-	//	}
-	//}
-	//// 签名
-	//signHex := vnt.Sign([]byte(pictureInfCrypt), nonceHex)
-	//// 广播上链
-	//txAddress, _ := vnt.SendRawTransaction(signHex)
-	//
-	//// 写入数据库
-	//certification.Address = txAddress
-	//certification.Url = url
-	//err = model.DB.Save(certification).Error
-	//if err != nil {
-	//	return serializer.DBErr("信息保存失败", err)
-	//}
-	//
-	// 删除msg
-	//model.DB.Delete(message.EducationalAcMsg)
 	model.DB.Delete(message)
 
 	return serializer.Response{

@@ -14,10 +14,11 @@ type Scheduler struct {
 }
 
 const (
-	WAIT      int = 1
-	EXECUTING int = 2
-	FAILED    int = 3
-	SUCCESS   int = 4
+	WAIT = iota
+	EXECUTING
+	FAILED
+	SUCCESS
+	NOPASS
 )
 
 func (s *Scheduler) GetStatus() string {
@@ -30,6 +31,8 @@ func (s *Scheduler) GetStatus() string {
 		return "失败"
 	case SUCCESS:
 		return "成功"
+	case NOPASS:
+		return "不通过"
 	default:
 		return "未知"
 	}
