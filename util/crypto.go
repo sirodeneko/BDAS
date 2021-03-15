@@ -82,3 +82,12 @@ func FileSHA256(filePath string) string {
 	sum := hash.Sum(nil)
 	return fmt.Sprintf("%x", sum)
 }
+
+var jsonKey string
+
+func GetJsonKey() string {
+	if jsonKey == "" {
+		jsonKey = os.Getenv("JSON_KEY")
+	}
+	return jsonKey
+}

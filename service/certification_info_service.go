@@ -36,7 +36,7 @@ func (service *CertificationInfoService) CertificationInfo(user *model.User) ser
 		}
 	}
 	data, _ := hex.DecodeString(dataHex[2:])
-	pictureInfoJson := util.AesDecrypt(string(data), getJsonKey())
+	pictureInfoJson := util.AesDecrypt(string(data), util.GetJsonKey())
 	var pictureInfo util.PictureInfo
 	err = json.Unmarshal([]byte(pictureInfoJson), &pictureInfo)
 	if err != nil {

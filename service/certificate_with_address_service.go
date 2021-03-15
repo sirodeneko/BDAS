@@ -37,7 +37,7 @@ func (service *CertificateWithAddressService) CertificateWithAddress() serialize
 		}
 	}
 	data, _ := hex.DecodeString(dataHex[2:])
-	pictureInfoJson := util.AesDecrypt(string(data), getJsonKey())
+	pictureInfoJson := util.AesDecrypt(string(data), util.GetJsonKey())
 	var pictureInfo util.PictureInfo
 	err = json.Unmarshal([]byte(pictureInfoJson), &pictureInfo)
 	if err != nil {

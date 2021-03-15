@@ -10,4 +10,5 @@ func migration() {
 	DB.AutoMigrate(&University{})
 	DB.AutoMigrate(&Inbox{})
 	DB.AutoMigrate(&Certification{})
+	DB.AutoMigrate(&Scheduler{})
 }

@@ -6,7 +6,7 @@ import (
 
 type Certification struct {
 	gorm.Model
-	CardCode     string
+	CardCode     string `gorm:"index"`
 	Name         string
 	Url          string
 	Address      string
