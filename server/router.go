@@ -73,6 +73,7 @@ func NewRouter() *gin.Engine {
 			authAdmin.PUT("admin/authenticated/user", api.AdminAuthUser)
 			authAdmin.PUT("admin/academic/certification", api.AdminACStudent)
 			authAdmin.GET("admin/userInfo", api.AdminGetUser)
+			authAdmin.GET("admin/msg", api.GetAMsg)
 
 		}
 		authUniversity := v1.Group("")
@@ -83,6 +84,7 @@ func NewRouter() *gin.Engine {
 			authUniversity.DELETE("university/logout", api.UniversityLogout)
 			authUniversity.PUT("university/modify/university", api.UniversityModify)
 			authUniversity.POST("university/studentAuth", api.StudentAuth)
+			authUniversity.GET("university/studentAuth/list", api.StudentAuthList)
 		}
 	}
 	return r

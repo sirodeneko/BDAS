@@ -62,7 +62,7 @@ func (service *AdminACStudentService) AdminACStudent() serializer.Response {
 			model.DB.Save(&inbox)
 			return serializer.Response{
 				Code: 0,
-				Msg:  "通过",
+				Msg:  "ok",
 			}
 		}
 	}

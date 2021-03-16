@@ -11,10 +11,11 @@ type Scheduler struct {
 	CertificationID  uint
 	Err              string
 	Status           int
+	StudentName      string
 }
 
 const (
-	WAIT = iota
+	WAIT = iota + 1
 	EXECUTING
 	FAILED
 	SUCCESS

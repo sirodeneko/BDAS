@@ -74,6 +74,7 @@ func (service *StudentAuthService) StudentAuth(university *model.University) ser
 		MessageID:        message.ID,
 		CertificationID:  0,
 		Status:           model.WAIT,
+		StudentName:      message.EducationalAcMsg.Name,
 	}
 	err = model.DB.Create(&sc).Error
 	if err != nil {

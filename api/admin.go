@@ -124,3 +124,14 @@ func AdminGetUser(c *gin.Context) {
 		c.JSON(200, ErrorResponse(err))
 	}
 }
+
+// 管理员获取一条msg
+func GetAMsg(c *gin.Context) {
+	var service service.GetAMsgService
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.GetAMsg()
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
+}

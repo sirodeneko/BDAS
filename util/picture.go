@@ -99,7 +99,7 @@ func (picInfo *PictureInfo) CreateImg() (string, error) {
 	drawText(img, font, baseFontSize, left, top+0*interval, "姓        名："+picInfo.Name)
 	drawText(img, font, baseFontSize, left, top+1*interval, "性        别："+IntToSex(picInfo.Sex))
 	drawText(img, font, baseFontSize, left, top+2*interval, "民        族："+picInfo.Ethnic)
-	drawText(img, font, baseFontSize, left, top+3*interval, "出生日期："+Int64ToStr(picInfo.Birthday))
+	drawText(img, font, baseFontSize, left, top+3*interval, "出生日期："+Int64TimeToStr(picInfo.Birthday))
 	drawText(img, font, baseFontSize, left, top+4*interval, "身份证号："+picInfo.CardCode)
 	drawText(img, font, baseFontSize, left, top+5*interval, "学历类别："+picInfo.EducationCategory)
 	drawText(img, font, baseFontSize, left, top+6*interval, "层        次："+picInfo.Level)
@@ -111,7 +111,7 @@ func (picInfo *PictureInfo) CreateImg() (string, error) {
 	drawText(img, font, baseFontSize, left, top+12*interval, "毕业日期："+picInfo.GraduationDate)
 	drawText(img, font, baseFontSize, left, top+13*interval, "状        态："+picInfo.Status)
 	drawText(img, font, baseFontSize, left, top+14*interval, "编        号："+strconv.Itoa(int(picInfo.FileID)))
-	drawText(img, font, baseFontSize, left, top+15*interval, "报告生成日期："+Int64ToStr(time.Now().Unix()))
+	drawText(img, font, baseFontSize, left, top+15*interval, "报告生成日期："+Int64TimeToStr(time.Now().Unix()))
 	drawText(img, font, baseFontSize+5, left, top+16*interval, "以上学历情况属实，专此认证")
 	drawText(img, font, baseFontSize+7, 1550, 3150, "DBAS学历认证系统")
 
