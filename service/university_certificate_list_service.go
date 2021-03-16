@@ -37,7 +37,7 @@ func (service *StudentAuthListService) StudentAuthList(university *model.Univers
 			m1 = 1
 			y1++
 		}
-		db = db.Where("created_at between ? and ?", fmt.Sprintf("'%d-%d-1 00:00:00'", y, m), fmt.Sprintf("'%d-%d-1 00:00:00'", y1, m1))
+		db = db.Where("created_at between ? and ?", fmt.Sprintf("%d-%d-1 00:00:00", y, m), fmt.Sprintf("%d-%d-1 00:00:00", y1, m1))
 	}
 	if service.Name != "" {
 		db = db.Where("student_name like ? ", fmt.Sprintf("%%%s%%", service.Name))
