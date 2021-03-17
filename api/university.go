@@ -98,3 +98,22 @@ func StudentAuthList(c *gin.Context) {
 		c.JSON(200, ErrorResponse(err))
 	}
 }
+
+// StudentAuthMsg 通过msg_id 获取msg信息
+func StudentAuthMsg(c *gin.Context) {
+	var service service.StudentAuthMsgService
+
+	var user *model.University
+	if u, ok := CurrentUser(c).(*model.University); ok {
+		user = u
+	} else {
+		c.JSON(200, serializer.CheckLogin())
+	}
+
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.StudentAuthMsg(user)
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
+}

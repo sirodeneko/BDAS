@@ -26,7 +26,7 @@ func (service *StudentAuthListService) StudentAuthList(university *model.Univers
 		service.Limit = 15
 	}
 
-	db = model.DB.Where("university_user_id = ?", university.ID)
+	db = model.DB.Where("university_name = ?", university.UniversityName)
 	if service.TimeLimit != 0 {
 		t := time.Unix(service.TimeLimit, 0)
 		y := t.Year()
@@ -52,7 +52,7 @@ func (service *StudentAuthListService) StudentAuthList(university *model.Univers
 		return serializer.DBErr("数据库链接错误", err)
 	}
 
-	err = db.Limit(service.Limit).Offset(service.Offset).Find(&scs).Error
+	err = db.Order("id desc").Limit(service.Limit).Offset(service.Offset).Find(&scs).Error
 	if err != nil {
 		return serializer.DBErr("数据库链接错误", err)
 	}

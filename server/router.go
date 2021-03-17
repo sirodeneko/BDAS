@@ -85,6 +85,7 @@ func NewRouter() *gin.Engine {
 			authUniversity.PUT("university/modify/university", api.UniversityModify)
 			authUniversity.POST("university/studentAuth", api.StudentAuth)
 			authUniversity.GET("university/studentAuth/list", api.StudentAuthList)
+			authUniversity.GET("university/studentAuth/list/msg", api.StudentAuthMsg)
 		}
 	}
 	return r
