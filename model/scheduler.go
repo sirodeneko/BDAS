@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2021.
+ * 项目名称:BDAS
+ * 文件名称:scheduler.go
+ * Date:2021/4/6 上午11:12
+ * Author:sirodeneko
+ */
+
 package model
 
 import "github.com/jinzhu/gorm"
