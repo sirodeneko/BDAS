@@ -69,12 +69,8 @@ func caFileAndChain(args interface{}) {
 	pictureInfoByte, _ := json.Marshal(pictureInfo)
 	pictureInfCrypt := util.AesEncrypt(string(pictureInfoByte), util.GetJsonKey())
 
-	// 获取nonce
-	nonce := vnt.GetNonce()
-	// 签名
-	signHex := vnt.Sign([]byte(pictureInfCrypt), nonce)
 	// 广播上链
-	txAddress, err := vnt.SendRawTransaction(signHex)
+	txAddress, err := vnt.SendTransaction([]byte(pictureInfCrypt))
 	if err != nil {
 		util.Log().Error("sc(id=%d)任务失败，数据上链失败: %v", sc.ID, err)
 		sc.Status = model.FAILED

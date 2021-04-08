@@ -9,16 +9,16 @@
 package vnt
 
 import (
+	"context"
 	"crypto/ecdsa"
-	"encoding/hex"
-	"github.com/vntchain/go-vnt/common"
-	"github.com/vntchain/go-vnt/core/types"
-	"github.com/vntchain/go-vnt/crypto"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/pkg/errors"
 	"math/big"
 	"os"
 	"singo/util"
-	"strconv"
-	"sync/atomic"
 )
 
 var privateKeyStr string
@@ -26,71 +26,55 @@ var ToAddressStr string
 var FormAddressStr string
 var privateKey *ecdsa.PrivateKey
 var toAddress common.Address
-
-// nonce 分发器变量
-var nonce *uint64
+var fromAddress common.Address
+var url string
+var client *ethclient.Client
 
 func VntInit() {
-	vntRequestInit()
+	url = os.Getenv("GNT_RPC_URL")
 	privateKeyStr = os.Getenv("PRIVSTE_KEY")
 	ToAddressStr = os.Getenv("TO_ADDRESS")
 	FormAddressStr = os.Getenv("FORM_ADDRESS")
 	privateKey, _ = crypto.HexToECDSA(privateKeyStr)
+	fromAddress = common.HexToAddress(FormAddressStr)
 	toAddress = common.HexToAddress(ToAddressStr)
-	nonceInit()
+	c, err := ethclient.Dial(url)
+	client = c
+	if err != nil {
+		util.Log().Panic("以太坊连接失败", err)
+	}
 }
 
-func Sign(data []byte, nonce uint64) string {
+func SendTransaction(data []byte) (string, error) {
+
+	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
+	if err != nil {
+		return "", errors.Errorf("获取nonce失败:%v", err)
+	}
+
 	value := big.NewInt(0)     // in wei (1 eth)
-	gasLimit := uint64(500000) // in units
-	gasPrice := big.NewInt(500000000000)
+	gasLimit := uint64(210000) // in units
+	gasPrice, err := client.SuggestGasPrice(context.Background())
+	if err != nil {
+		return "", errors.Errorf("获取gas价格失败:%v", err)
+	}
 
 	tx := types.NewTransaction(nonce, toAddress, value, gasLimit, gasPrice, data)
-	signer := types.NewHubbleSigner(big.NewInt(2))
 
-	signedTx, _ := types.SignTx(tx, signer, privateKey)
-
-	ts := types.Transactions{signedTx}
-	rawTxBytes := ts.GetRlp(0)
-	rawTxHex := hex.EncodeToString(rawTxBytes)
-
-	return "0x" + rawTxHex
-}
-
-func nonceInit() {
-	nonce = new(uint64)
-	// 获取nonce
-	// 注意，必须先确保FormAddressStr被赋值
-	nonceHex, err := GetTransactionCount(FormAddressStr)
+	chainID, err := client.NetworkID(context.Background())
 	if err != nil {
-		util.Log().Panic("nonceHex获取失败，区块链初始化失败: %v", err)
-		return
+		return "", errors.Errorf("获取chainID失败:%v", err)
 	}
-	val := nonceHex[2:]
-	num, _ := strconv.ParseUint(val, 16, 32)
-	atomic.StoreUint64(nonce, num)
-}
 
-//-------------------------------------------
-//TODO 此nonce为单机分发器，多机获取nonce必须重构
-
-func GetNonce() uint64 {
-	// 加一后返回
-	num := atomic.AddUint64(nonce, 1)
-	// 因为要加一又要保证原子性，故必须只执行一次，对其+1，返回加一后的值，需要的是原本的值，故减一
-	return num - 1
-}
-
-func ReNonceInitWithGet() uint64 {
-	// 获取nonce
-	// 注意，必须先确保FormAddressStr被赋值
-	nonceHex, err := GetTransactionCount(FormAddressStr)
+	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), privateKey)
 	if err != nil {
-		util.Log().Panic("nonceHex获取失败，区块链初始化失败: %v", err)
-		return 0
+		return "", errors.Errorf("签名失败:%v", err)
 	}
-	val := nonceHex[2:]
-	num, _ := strconv.ParseUint(val, 16, 32)
-	atomic.StoreUint64(nonce, num)
-	return GetNonce()
+
+	err = client.SendTransaction(context.Background(), signedTx)
+	if err != nil {
+		return "", errors.Errorf("交易发送失败:%v", err)
+	}
+
+	return signedTx.Hash().Hex(), nil
 }
