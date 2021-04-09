@@ -54,6 +54,9 @@ func NewRouter() *gin.Engine {
 		// 认证2：游客根据文件和编号查询真伪
 		v1.GET("certificate/file", api.CertificateWithFile)
 
+		// 检查是否登陆
+		v1.GET("me", api.Me)
+
 		// 需要登录保护的
 		authUser := v1.Group("")
 		authUser.Use(middleware.AuthUserRequired())

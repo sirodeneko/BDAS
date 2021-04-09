@@ -18,7 +18,7 @@ func CurrentUser() gin.HandlerFunc {
 			user, err := model.GetUserWithType(utype.(string), uid)
 			if err == nil {
 				c.Set("user", user)
-				//c.Set("userType",utype)
+				c.Set("userType", utype)
 			}
 		}
 		c.Next()

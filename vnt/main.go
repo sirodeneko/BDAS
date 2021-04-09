@@ -76,5 +76,5 @@ func SendTransaction(data []byte) (string, error) {
 		return "", errors.Errorf("交易发送失败:%v", err)
 	}
 
-	return signedTx.Hash().Hex(), nil
+	return signedTx.Hash().Hex(), nil //0x...
 }

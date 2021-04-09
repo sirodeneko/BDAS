@@ -51,3 +51,12 @@ func ErrorResponse(err error) serializer.Response {
 
 	return serializer.ParamErr("参数错误", err)
 }
+
+// Me 获取当前用户信息
+func Me(c *gin.Context) {
+	userType := "未登录"
+	if ut, _ := c.Get("userType"); ut != nil {
+		userType = ut.(string)
+	}
+	c.JSON(200, serializer.Response{Data: userType})
+}
