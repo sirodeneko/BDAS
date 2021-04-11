@@ -11,6 +11,7 @@ package util
 import (
 	"math/rand"
 	"time"
+	"unicode/utf8"
 )
 
 // RandStringRunes 返回随机字符串
@@ -27,15 +28,25 @@ func RandStringRunes(n int) string {
 
 // HiddenCharacters 隐藏部分字符(中间二分之一）
 func HiddenCharacters(s string) string {
-	if len(s) <= 2 {
+	t := utf8.RuneCountInString(s)
+	temp := []rune(s)
+	if t <= 1 {
 		return s
 	}
-	b := []byte(s)
-	var l = len(b) / 4
-	for i := l; i < len(b)-l; i++ {
-		b[i] = '*'
+	if t == 2 {
+		temp[1] = '*'
+		return string(temp)
 	}
-	return string(b)
+	if t == 3 {
+		temp[1] = '*'
+		temp[2] = '*'
+		return string(temp)
+	}
+	var l = len(temp) / 4
+	for i := l; i < len(temp)-l; i++ {
+		temp[i] = '*'
+	}
+	return string(temp)
 }
 
 func IntToSex(i uint) string {

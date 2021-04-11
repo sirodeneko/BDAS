@@ -68,7 +68,7 @@ func (service *AdminAuthUserService) AdminAuthUser() serializer.Response {
 			var inbox = model.Inbox{
 				UserType: model.UserType,
 				UserID:   user.ID,
-				Body: "您好，您的身份认证请求经管理员审核<div style=\"color:red;\">不通过</div>，原因如下：<br>" +
+				Body: "您好，您的身份认证请求经管理员审核<span style=\"color:red;\">不通过</span>，原因如下：<br>" +
 					service.Msg +
 					"<br>感谢您使用本平台，祝您生活愉快",
 				Title: "身份认证不通过",
@@ -94,7 +94,7 @@ func (service *AdminAuthUserService) AdminAuthUser() serializer.Response {
 	var inbox = model.Inbox{
 		UserType: model.UserType,
 		UserID:   user.ID,
-		Body:     "您好，您的身份认证请求经管理员审核<div style=\"color:red;\">通过</div> <br>感谢您使用本平台，祝您生活愉快",
+		Body:     "您好，您的身份认证请求经管理员审核<span style=\"color:red;\">通过</span> <br>感谢您使用本平台，祝您生活愉快",
 		Title:    "身份认证通过",
 		State:    0,
 	}

@@ -85,6 +85,7 @@ func NewRouter() *gin.Engine {
 			authAdmin.PUT("admin/academic/certification", api.AdminACStudent)
 			authAdmin.GET("admin/userInfo", api.AdminGetUser)
 			authAdmin.GET("admin/msg", api.GetAMsg)
+			authAdmin.POST("admin/inbox/send", api.AdminSendInbox)
 
 		}
 		authUniversity := v1.Group("")

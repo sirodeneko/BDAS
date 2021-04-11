@@ -18,6 +18,7 @@ import (
 type InboxListService struct {
 	Limit  int `json:"limit" form:"limit"`
 	Offset int `json:"offset" form:"offset"`
+	//Op int `json:"op" form:"op"`
 }
 
 func (service *InboxListService) InboxList(c *gin.Context) serializer.Response {
@@ -40,6 +41,7 @@ func (service *InboxListService) InboxList(c *gin.Context) serializer.Response {
 	if err := model.DB.Limit(service.Limit).Offset(service.Offset).Where("user_type = ? AND user_id = ?", utype, uid).Order("id desc").Find(&inboxes).Error; err != nil {
 		return serializer.DBErr("数据库链接错误", err)
 	}
+	//time.Sleep(3*time.Second)
 
 	return serializer.BuildListResponse(serializer.BuildInboxes(inboxes), uint(total))
 }

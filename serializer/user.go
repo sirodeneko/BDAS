@@ -19,6 +19,7 @@ type User struct {
 	UserName  string `json:"user_name"`
 	Nickname  string `json:"nickname"`
 	Status    string `json:"status"`
+	Name      string `json:"name"`
 	CardCode  string `json:"card_code"`
 	CreatedAt int64  `json:"created_at"`
 }
@@ -30,6 +31,7 @@ func BuildUser(user model.User) User {
 		UserName:  user.UserName,
 		CardCode:  util.HiddenCharacters(user.CardCode),
 		Nickname:  user.Nickname,
+		Name:      util.HiddenCharacters(user.Name),
 		Status:    user.Status,
 		CreatedAt: user.CreatedAt.Unix(),
 	}

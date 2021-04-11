@@ -143,3 +143,14 @@ func GetAMsg(c *gin.Context) {
 		c.JSON(200, ErrorResponse(err))
 	}
 }
+
+// 管理员发送通知消息
+func AdminSendInbox(c *gin.Context) {
+	var service service.AdminSendInboxService
+	if err := c.ShouldBind(&service); err == nil {
+		res := service.AdminSendInbox(c)
+		c.JSON(200, res)
+	} else {
+		c.JSON(200, ErrorResponse(err))
+	}
+}
