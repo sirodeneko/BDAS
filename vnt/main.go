@@ -78,3 +78,7 @@ func SendTransaction(data []byte) (string, error) {
 
 	return signedTx.Hash().Hex(), nil //0x...
 }
+
+// https://faucet.rinkeby.io/ 水龙头
+// https://rinkeby.infura.io https://rinkeby.etherscan.io/
+// https://twitter.com/siro59344443/status/1380052088139382785
