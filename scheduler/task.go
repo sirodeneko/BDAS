@@ -21,14 +21,17 @@ func caFileAndChain(args interface{}) {
 
 	message, _ := args.(*model.Message)
 
+	// 开启事务
+	tx := model.DB.Begin()
+
 	// 查询被软删除的记录
-	err := model.DB.Unscoped().Where("message_id = ? ", message.ID).First(&sc).Error
+	err := tx.Unscoped().Where("message_id = ? ", message.ID).First(&sc).Error
 	if err != nil {
 		util.Log().Error("sc(message_id=%d)任务失败，数据库查询失败: %v", message.ID, err)
 		return
 	}
 	sc.Status = model.EXECUTING
-	model.DB.Save(&sc)
+	tx.Save(&sc)
 
 	pictureInfo := model2PictureInfo(&message.EducationalAcMsg)
 
@@ -40,12 +43,13 @@ func caFileAndChain(args interface{}) {
 		Name:         pictureInfo.Name,
 	}
 	// 先保存主要数据
-	err = model.DB.Save(&certification).Error
+	err = tx.Save(&certification).Error
 	if err != nil {
 		util.Log().Error("sc(id=%d)任务失败，数据库查询失败: %v", sc.ID, err)
 		sc.Status = model.FAILED
 		sc.Err = err.Error()
 		model.DB.Save(&sc)
+		tx.Rollback()
 		return
 	}
 
@@ -60,6 +64,7 @@ func caFileAndChain(args interface{}) {
 		sc.Status = model.FAILED
 		sc.Err = err.Error()
 		model.DB.Save(&sc)
+		tx.Rollback()
 		return
 	}
 
@@ -76,22 +81,25 @@ func caFileAndChain(args interface{}) {
 		sc.Status = model.FAILED
 		sc.Err = err.Error()
 		model.DB.Save(&sc)
+		tx.Rollback()
 		return
 	}
 
 	// 写入数据库
 	certification.Address = txAddress
 	certification.Url = url
-	err = model.DB.Save(certification).Error
+	err = tx.Save(certification).Error
 	if err != nil {
 		util.Log().Error("sc(id=%d)任务失败，数据上链成功但是保存失败: %v", sc.ID, err)
 		sc.Status = model.FAILED
 		sc.Err = err.Error()
 		model.DB.Save(&sc)
+		tx.Rollback()
 		return
 	}
 	sc.Status = model.SUCCESS
-	model.DB.Save(&sc)
+	tx.Save(&sc)
+	tx.Commit()
 	util.Log().Info("sc(id=%d)任务成功，数据上链成功: %v", sc.ID, err)
 	// 删除msg
 	//model.DB.Delete(message.EducationalAcMsg)

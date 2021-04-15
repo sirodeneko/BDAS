@@ -16,8 +16,8 @@ import (
 )
 
 type AdminACStudentService struct {
-	MsgID string `json:"msg_id" form:"msg_id" binding:"required"`
-	Op    uint   `json:"op" form:"op"`
+	MsgID uint   `json:"msg_id" form:"msg_id" binding:"required"`
+	Op    uint   `json:"op" form:"op"` // 非0不通过
 	Msg   string `json:"msg" form:"msg"`
 }
 

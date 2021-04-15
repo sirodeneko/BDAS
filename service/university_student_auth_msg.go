@@ -21,7 +21,7 @@ func (service *StudentAuthMsgService) StudentAuthMsg(university *model.Universit
 
 	var message model.Message
 
-	err := model.DB.Preload("EducationalAcMsg").First(&message, service.MsgID).Error
+	err := model.DB.Unscoped().Preload("EducationalAcMsg").First(&message, service.MsgID).Error
 	if err != nil {
 		return serializer.Response{
 			Code:  404,

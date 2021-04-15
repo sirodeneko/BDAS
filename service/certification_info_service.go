@@ -9,7 +9,6 @@
 package service
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"singo/model"
 	"singo/serializer"
@@ -43,8 +42,9 @@ func (service *CertificationInfoService) CertificationInfo(user *model.User) ser
 			Error: err.Error(),
 		}
 	}
-	data, _ := hex.DecodeString(dataHex[2:])
-	pictureInfoJson := util.AesDecrypt(string(data), util.GetJsonKey())
+	// 返回的dataHex，其实就是正常的utf-8不需要转换
+	//data, _ := hex.DecodeString(dataHex)
+	pictureInfoJson := util.AesDecrypt(dataHex, util.GetJsonKey())
 	var pictureInfo util.PictureInfo
 	err = json.Unmarshal([]byte(pictureInfoJson), &pictureInfo)
 	if err != nil {

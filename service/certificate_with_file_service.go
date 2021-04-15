@@ -9,7 +9,6 @@
 package service
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"singo/model"
 	"singo/serializer"
@@ -38,8 +37,9 @@ func (service *CertificateWithFileService) CertificateWithFile() serializer.Resp
 			Error: err.Error(),
 		}
 	}
-	data, _ := hex.DecodeString(dataHex[2:])
-	pictureInfoJson := util.AesDecrypt(string(data), util.GetJsonKey())
+	// 不需要转码
+	//data, _ := hex.DecodeString(dataHex[2:])
+	pictureInfoJson := util.AesDecrypt(dataHex, util.GetJsonKey())
 	var pictureInfo util.PictureInfo
 	err = json.Unmarshal([]byte(pictureInfoJson), &pictureInfo)
 	if err != nil {
@@ -51,7 +51,7 @@ func (service *CertificateWithFileService) CertificateWithFile() serializer.Resp
 	}
 	if pictureInfo.FileHash == fileHash {
 		return serializer.Response{
-			Data: true,
+			Data: pictureInfo.Response(),
 		}
 	} else {
 		return serializer.Response{

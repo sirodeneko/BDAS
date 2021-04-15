@@ -9,7 +9,6 @@
 package service
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"singo/model"
 	"singo/serializer"
@@ -44,8 +43,7 @@ func (service *CertificateWithAddressService) CertificateWithAddress() serialize
 			Error: err.Error(),
 		}
 	}
-	data, _ := hex.DecodeString(dataHex[2:])
-	pictureInfoJson := util.AesDecrypt(string(data), util.GetJsonKey())
+	pictureInfoJson := util.AesDecrypt(dataHex, util.GetJsonKey())
 	var pictureInfo util.PictureInfo
 	err = json.Unmarshal([]byte(pictureInfoJson), &pictureInfo)
 	if err != nil {
@@ -57,6 +55,6 @@ func (service *CertificateWithAddressService) CertificateWithAddress() serialize
 	}
 
 	return serializer.Response{
-		Data: pictureInfo,
+		Data: pictureInfo.Response(),
 	}
 }

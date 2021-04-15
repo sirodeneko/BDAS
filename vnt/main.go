@@ -80,5 +80,6 @@ func SendTransaction(data []byte) (string, error) {
 }
 
 // https://faucet.rinkeby.io/ 水龙头
-// https://rinkeby.infura.io https://rinkeby.etherscan.io/
+// https://rinkeby.etherscan.io/ 区块链浏览器
+// https://rinkeby.infura.io/v3/144451a1ec8e493891a105db4147309b rpc网址
 // https://twitter.com/siro59344443/status/1380052088139382785

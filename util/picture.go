@@ -191,3 +191,27 @@ func drawText(img *image.NRGBA, font *truetype.Font, fontSize float64, x int, y 
 	}
 	return nil
 }
+
+func (picInfo *PictureInfo) Response() PictureInfo {
+	return PictureInfo{
+		CreatedAt:         picInfo.CreatedAt,
+		Name:              HiddenCharacters(picInfo.Name),
+		Sex:               picInfo.Sex,
+		Ethnic:            picInfo.Ethnic,
+		Birthday:          picInfo.Birthday,
+		CardCode:          HiddenCharacters(picInfo.CardCode),
+		EducationCategory: picInfo.EducationCategory,
+		Level:             picInfo.Level,
+		University:        picInfo.University,
+		Professional:      picInfo.Professional,
+		LearningFormat:    picInfo.LearningFormat,
+		EducationalSystem: picInfo.EducationalSystem,
+		AdmissionDate:     picInfo.AdmissionDate,
+		GraduationDate:    picInfo.GraduationDate,
+		Status:            picInfo.Status,
+		StudentAvatar:     picInfo.StudentAvatar,
+		FileID:            picInfo.FileID,
+		FileUrl:           picInfo.FileUrl,
+		FileHash:          picInfo.FileHash,
+	}
+}
