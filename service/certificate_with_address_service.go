@@ -28,7 +28,7 @@ func (service *CertificateWithAddressService) CertificateWithAddress() serialize
 	if err != nil {
 		return serializer.DBErr("数据库查询失败", err)
 	}
-	if certification.CardCode != service.CardCode && certification.Name != service.Name {
+	if certification.CardCode != service.CardCode || certification.Name != service.Name {
 		return serializer.Response{
 			Code: 403,
 			Msg:  "信息错误或者证书不存在",

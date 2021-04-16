@@ -5,3 +5,4 @@ go.sum
 /play.sh
 /static/file/
 /static/certificate/
+.exe
