@@ -6,6 +6,12 @@
 A blockchain degree authentication system with golang.
 
 go语言实现的基于区块链的学位学历认证系统。
+## 流程设计图
+
+![流程图1](/1.png)
+![流程图2](/2.png)
+![流程图3](/3.png)
+
 
 ### [api文档地址](https://documenter.getpostman.com/view/8122584/TW6tNAck)
 
